@@ -1,0 +1,154 @@
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(white);
+  }
+  .login-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0px 15px 15px rgba(0, 0, 0.1, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  .login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .login-header h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d3748;
+  }
+  
+  .login-header p {
+    color: #4a5568;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+  .input-field {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #2d3748;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+  }
+  .submit-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #1d4ed8;
+    color: white;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #2563eb;
+  }
+  
+  .submit-button:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+  }
+  .message {
+    text-align: center;
+    color: #e53e3e;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  .link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: #1d4ed8;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  /* Login.css */
+.profile-container {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  .profile-icon {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .profile-icon img {
+    width: 100%;
+    border-radius: 50%;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 200px;
+    z-index: 10;
+  }
+  
+  .dropdown-menu p {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  
+  .logout-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .logout-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  .link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  
+  
