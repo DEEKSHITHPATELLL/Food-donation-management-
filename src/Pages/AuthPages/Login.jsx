@@ -1,128 +1,162 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import the axios instance
+import { FaEnvelope, FaLock, FaGoogle, FaFacebook, FaGithub } from 'react-icons/fa';
 import './Login.css';
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [userData, setUserData] = useState(null); 
-  
+const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false,
+  });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      setMessage('Please fill in all fields.');
-      return;
-    }
-
-    setLoading(true);
-    setMessage(""); 
+    setError('');
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/auth/login', 
-        { email, password }
+        'http://localhost:8080/api/auth/login',
+        formData,
+        { withCredentials: true }
       );
 
-      if (response.status === 200) {
-        setMessage('Login successful!');
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        setTimeout(() => navigate('/Dashboard'), 1000);
+      if (response.data.success) {
+        // Store the token if available
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
+
+        // Store user information
+        const userData = {
+          username: response.data.name || response.data.username,
+          email: formData.email,
+          userType: response.data.userType,
+          organizationName: response.data.organizationName || ''
+        };
+        localStorage.setItem('user', JSON.stringify(userData));
+
+        console.log('Login successful, user type:', response.data.userType);
+        alert('Login successful!');
+
+        // Redirect based on userType
+        if (response.data.userType === 'ngo') {
+          navigate('/dashboard');
+        } else {
+          navigate('/user-dashboard');
+        }
       } else {
-        setMessage('Unexpected response format.');
+        setError(response.data.message || 'Invalid credentials');
       }
-    } catch (error) {
-      console.error('Login failed:', error);
-      if (error.response) {
-        setMessage(error.response.data.message || 'An error occurred during login.');
-      } else {
-        setMessage('An error occurred while processing your request.');
-      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
   };
 
   return (
     <div className="login-container">
       <div className="login-card">
-        <header className="login-header">
-          <h2>Login Here</h2>
-          <p>Please enter your credentials to login</p>
-        </header>
+        <div className="login-header">
+          <h2 className="login-title">Welcome Back</h2>
+          <p className="login-subtitle">Sign in to continue to your account</p>
+        </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
-              required
-            />
+          <div className="form-group">
+            <label className="form-label">Email Address</label>
+            <div className="input-group">
+              <FaEnvelope className="input-icon" />
+              <input
+                type="email"
+                name="email"
+                className="form-input"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
-          <div className="input-group">
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
-              required
-            />
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <div className="input-group">
+              <FaLock className="input-icon" />
+              <input
+                type="password"
+                name="password"
+                className="form-input"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
+
+          <div className="remember-me">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              id="rememberMe"
+              checked={formData.rememberMe}
+              onChange={handleChange}
+            />
+            <label htmlFor="rememberMe">Remember me</label>
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
 
           <button
             type="submit"
-            disabled={loading}
-            className={`submit-button ${loading ? 'loading' : ''}`}
+            className={`login-button ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        {message && <p className="message">{message}</p>}
-
-        <Link to="/register" className="link">
-          Don't have an account? Register here
-        </Link>
-      </div>
-      {userData && (
-        <div className="profile-container">
-          <div className="profile-icon" onClick={toggleDropdown}>
-            <img src="https://via.placeholder.com/40" alt="Profile" />
-          </div>
-
-          {showDropdown && (
-            <div className="dropdown-menu">
-              <p><strong>Username:</strong> {userData.username}</p>
-              <p><strong>Password:</strong> ********</p>
-              <Link to="/profile" className="link">Go to Profile</Link>
-              <button className="logout-btn" onClick={() => {
-                localStorage.removeItem('user');
-                setUserData(null);
-                navigate('/login');
-              }}>
-                Logout
-              </button>
-            </div>
-          )}
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot your password?</Link>
         </div>
-      )}
+
+        <div className="social-login">
+          <p className="social-login-title">Or continue with</p>
+          <div className="social-buttons">
+            <button className="social-button">
+              <FaGoogle />
+            </button>
+            <button className="social-button">
+              <FaFacebook />
+            </button>
+            <button className="social-button">
+              <FaGithub />
+            </button>
+          </div>
+        </div>
+
+        <div className="register-link">
+          <p>Don't have an account? <Link to="/register">Sign up</Link></p>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;

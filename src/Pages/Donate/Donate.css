@@ -1,0 +1,393 @@
+.donate-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 4rem 2rem;
+}
+
+.donate-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.donate-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInDown 0.8s ease;
+}
+
+.donate-title {
+    font-size: 2.5rem;
+    color: #2d3436;
+    margin-bottom: 1rem;
+}
+
+.donate-subtitle {
+    color: #636e72;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.donation-form {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.8s ease;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2d3436;
+    font-weight: 500;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #FF6B6B;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Food Type Selection */
+.food-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.food-type-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid #e1e1e1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.food-type-card:hover {
+    border-color: #FF6B6B;
+    transform: translateY(-2px);
+}
+
+.food-type-card.selected {
+    border-color: #FF6B6B;
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.food-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #FF6B6B;
+}
+
+/* Quantity Section */
+.quantity-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quantity-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f2f6;
+    color: #2d3436;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quantity-button:hover {
+    background: #FF6B6B;
+    color: white;
+}
+
+/* Location Input and Button */
+.location-input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.location-input-group input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.location-input-group input:focus {
+    border-color: #FF6B6B;
+    outline: none;
+}
+
+.location-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: #FF6B6B;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.location-button:hover {
+    background: #ff5252;
+}
+
+.location-button:disabled {
+    background: #b2bec3;
+    cursor: not-allowed;
+}
+
+.location-button svg {
+    font-size: 1.2rem;
+}
+
+.error-message {
+    color: #ff5252;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Submit Button */
+.submit-button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+<<<<<<< HEAD
+    margin-top: 2rem;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+/* Success Message */
+.success-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #2ed573;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    animation: slideIn 0.5s ease;
+    z-index: 1000;
+}
+
+/* Loading State */
+.submit-button.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.submit-button.loading::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+/* Map Container */
+.map-container {
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+=======
+  }
+  
+  .call-to-action div i {
+    font-size: 40px;
+    color: #27ae60;
+    margin-bottom: 10px;
+  }
+  
+  /* Add icons to each call-to-action */
+  .icon {
+    font-size: 60px;
+    color: #f39c12;
+  }
+  
+  .donation-graph canvas {
+    animation: fadeIn 1s ease-in-out;
+  }
+  .donate-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .status-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  
+  .status-failure {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+>>>>>>> 3739970da47791e77f4efd66f856219fdda88d0f
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .donate-container {
+        padding: 2rem 1rem;
+    }
+
+    .donate-title {
+        font-size: 2rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+
+    .food-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip:hover::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 1rem;
+    background: #2d3436;
+    color: white;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

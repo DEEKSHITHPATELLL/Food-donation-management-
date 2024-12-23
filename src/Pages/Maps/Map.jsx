@@ -1,96 +1,199 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
+import { useDonation } from '../../context/DonationContext';
+import { FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import './Map.css';
-const containerStyle = {
-  width: '100%',
-  height: '600px',
+
+// Tumkur coordinates
+const defaultCenter = {
+  lat: 13.3379,
+  lng: 77.1173,
 };
-const center = {
-  lat: 13.3389,
-  lng: 77.1010,
-};
-const ngoLocations = [
-  { id: 1, name: 'NGO Care', position: { lat: 13.3398, lng: 77.1100 }, phone: '+919999999999' },
-  { id: 2, name: 'Food for All', position: { lat: 13.3421, lng: 77.1050 }, phone: '+919888888888' },
-  { id: 3, name: 'Help the Hungry', position: { lat: 13.3375, lng: 77.0970 }, phone: '+919777777777' },
+
+// Sample NGO data for Tumkur area
+const tumkurNGOs = [
+  {
+    id: 1,
+    name: "Tumkur Food Bank",
+    description: "Collecting and distributing food to needy people in Tumkur",
+    location: {
+      latitude: 13.3422,
+      longitude: 77.1138,
+      address: "Near City Market, Tumkur"
+    },
+    phone: "080-12345678",
+    email: "tumkurfoodbank@email.com",
+    rating: 4.5,
+    activePickups: 3
+  },
+  {
+    id: 2,
+    name: "Sri Siddaganga Food Relief",
+    description: "Food donation center near Siddaganga Mutt",
+    location: {
+      latitude: 13.3486,
+      longitude: 77.1144,
+      address: "Siddaganga Mutt Road, Tumkur"
+    },
+    phone: "080-23456789",
+    email: "siddaganga.relief@email.com",
+    rating: 4.8,
+    activePickups: 5
+  },
+  {
+    id: 3,
+    name: "Tumkur District Food Support",
+    description: "District-level food collection and distribution center",
+    location: {
+      latitude: 13.3341,
+      longitude: 77.1198,
+      address: "District Office Road, Tumkur"
+    },
+    phone: "080-34567890",
+    email: "districtfood@email.com",
+    rating: 4.3,
+    activePickups: 4
+  }
 ];
-const toRad = (value) => (value * Math.PI) / 180;
-const haversineDistance = (lat1, lon1, lat2, lon2) => {
-  const R = 6371;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; 
-};
+
+// Define custom markers
+const ngoIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+      <path fill="#4CAF50" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/>
+    </svg>
+  `),
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const userIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+      <path fill="#2196F3" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/>
+    </svg>
+  `),
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
 
 const Map = () => {
   const [userLocation, setUserLocation] = useState(null);
-  const [nearbyNgos, setNearbyNgos] = useState([]);
+  const [selectedNgo, setSelectedNgo] = useState(null);
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const history = useNavigate();
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-          const nearby = ngoLocations.filter((ngo) =>
-            haversineDistance(latitude, longitude, ngo.position.lat, ngo.position.lng) <= 10
-          );
-          setNearbyNgos(nearby);
+          const userPos = { lat: latitude, lng: longitude };
+          setUserLocation(userPos);
         },
         () => {
-          alert('Could not fetch location.');
+          console.warn('Could not fetch location.');
         }
       );
-    } else {
-      alert('Geolocation is not supported by this browser.');
     }
   }, []);
 
-  const handleCall = async (phone) => {
-    try {
-      await axios.post('/api/call', { phoneNumber: phone });
-      alert(`Calling NGO at ${phone}`);
-    } catch (error) {
-      console.error('Error initiating call:', error);
-      alert('Failed to place a call');
-    }
+  const handleNgoSelect = (ngo) => {
+    setSelectedNgo(ngo);
+    setMapCenter({
+      lat: ngo.location?.latitude || defaultCenter.lat,
+      lng: ngo.location?.longitude || defaultCenter.lng
+    });
+  };
+
+  const handleInfoWindowClose = () => {
+    setSelectedNgo(null);
+  };
+
+  const handleDonateClick = (ngo) => {
+    localStorage.setItem('selectedNgo', JSON.stringify(ngo));
+    history('/help');
   };
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyAWehjD-JTPbCiGY_nlSWIqaYI0mQHhyfw">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={userLocation || center} 
+    <div className="map-container">
+      <div className="nearby-ngos">
+        <h3>NGOs in Tumkur</h3>
+        <div className="ngo-list">
+          {tumkurNGOs.map(ngo => (
+            <div key={ngo.id} className="ngo-item" onClick={() => handleNgoSelect(ngo)}>
+              <h4>{ngo.name}</h4>
+              <p>{ngo.location?.address}</p>
+              <div className="ngo-stats">
+                <span>Rating: {ngo.rating}★</span>
+                <span>{ngo.activePickups} active pickups</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <MapContainer
+        center={mapCenter}
         zoom={14}
+        style={{ height: '400px', width: '100%' }}
       >
-        {nearbyNgos.map((ngo) => (
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+
+        {/* NGO Markers */}
+        {tumkurNGOs.map((ngo) => (
           <Marker
             key={ngo.id}
-            position={ngo.position}
-            label={ngo.name}
-            onClick={() => handleCall(ngo.phone)} 
-          />
-        ))}
-        {userLocation && (
-          <Marker
-            position={userLocation}
-            label="You are here"
-            icon={{
-              path: "M 0,0 L 10,10 L 0,20 L -10,10 Z",
-              fillColor: "red",
-              fillOpacity: 1,
-              scale: 2,
-              strokeColor: "red",
-              strokeWeight: 2,
+            position={{
+              lat: ngo.location?.latitude || defaultCenter.lat,
+              lng: ngo.location?.longitude || defaultCenter.lng
             }}
-          />
+            icon={ngoIcon}
+          >
+            <Popup>
+              <div className="map-info-window">
+                <h3>{ngo.name}</h3>
+                <p>{ngo.description}</p>
+                <div className="info-details">
+                  <p><FaMapMarkerAlt /> {ngo.location?.address}</p>
+                  <p><FaPhone /> {ngo.phone}</p>
+                  <p><FaEnvelope /> {ngo.email}</p>
+                </div>
+                <div className="info-stats">
+                  <span>Rating: {ngo.rating}★</span>
+                  <span>Active Pickups: {ngo.activePickups}</span>
+                </div>
+                <button
+                  className="donate-btn"
+                  onClick={() => handleDonateClick(ngo)}
+                >
+                  Donate Now
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {/* User Location Marker */}
+        {userLocation && (
+          <Marker position={userLocation} icon={userIcon}>
+            <Popup>
+              <div className="user-location">
+                <p>Your Location</p>
+              </div>
+            </Popup>
+          </Marker>
         )}
-      </GoogleMap>
-    </LoadScript>
+      </MapContainer>
+    </div>
   );
 };
 

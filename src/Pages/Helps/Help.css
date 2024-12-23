@@ -1,0 +1,105 @@
+
+.help-container {
+    background-color: #f4f4f9;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 40px auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+  }
+  
+  .help-container h1 {
+    color: #2a4d9c;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .help-intro {
+    color: #444;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .help-subtitle {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  .help-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .help-form label {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+  
+  .help-form input,
+  .help-form textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .help-form input:focus,
+  .help-form textarea:focus {
+    outline: none;
+    border: 1px solid #2a4d9c;
+  }
+  
+  .help-form input[type="submit"] {
+    background-color: #2a4d9c;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+  
+  .help-form input[type="submit"]:hover {
+    background-color: #1e3a74;
+  }
+  .help-form input[type="submit"] {
+    margin-top: 20px;
+  }
+  
+  .help-form textarea {
+    min-height: 100px;
+    max-height: 200px;
+  }
+  
+  .help-form input::placeholder,
+  .help-form textarea::placeholder {
+    color: #888;
+  }
+  
+  @media (max-width: 768px) {
+    .help-container {
+      padding: 20px;
+    }
+  
+    .help-form {
+      gap: 10px;
+    }
+  
+    .help-form input,
+    .help-form textarea {
+      font-size: 0.9rem;
+    }
+  
+    .help-container h1 {
+      font-size: 2rem;
+    }
+  }
+  

@@ -1,0 +1,150 @@
+.profile-button-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 50px;
+  background: #FF6B6B;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-initials {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.profile-image {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-icon {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  padding: 1rem;
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.user-info strong {
+  color: #2D3436;
+  font-size: 1rem;
+}
+
+.user-email {
+  color: #636E72;
+  font-size: 0.85rem;
+}
+
+.user-type {
+  color: #FF6B6B;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #E9ECEF;
+  margin: 0.5rem 0;
+}
+
+.logout-button {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  background: none;
+  color: #FF6B6B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.logout-button:hover {
+  background: #FFF5F5;
+}
+
+@media (max-width: 768px) {
+  .profile-button {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .profile-name {
+    max-width: 100px;
+  }
+
+  .profile-dropdown {
+    min-width: 200px;
+  }
+}
