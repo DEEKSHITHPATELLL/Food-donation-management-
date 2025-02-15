@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FaUtensils, FaAppleAlt, FaBreadSlice, FaCarrot, FaWineBottle, FaMapMarkerAlt } from 'react-icons/fa';
 import { useDonation } from '../../context/DonationContext';
 import 'leaflet/dist/leaflet.css';
+import emailjs from 'emailjs-com';
+import axios from 'axios';
 import './Donate.css';
 
 const Donate = () => {
@@ -20,7 +22,11 @@ const Donate = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [locationError, setLocationError] = useState('');
   const [isLocating, setIsLocating] = useState(false);
-
+  const [registeredNumbers, setRegisteredNumbers] = useState([
+    { name: "NGO1", number: "+919353842851" },
+    { name: "NGO2", number: "+14155552671" },
+    { name: "NGO3", number: "+14155552672" }
+]);
   const foodTypes = [
     { id: 'cooked', icon: FaUtensils, label: 'Cooked Food' },
     { id: 'fruits', icon: FaAppleAlt, label: 'Fruits' },
@@ -28,7 +34,7 @@ const Donate = () => {
     { id: 'vegetables', icon: FaCarrot, label: 'Vegetables' },
     { id: 'beverages', icon: FaWineBottle, label: 'Beverages' }
   ];
-
+  const [selectedNumber, setSelectedNumber] = useState(registeredNumbers[0]?.number || '');
   const getLocation = () => {
     setIsLocating(true);
     setLocationError('');
@@ -160,7 +166,30 @@ const Donate = () => {
       setIsLoading(false);
     }
   };
-
+  const sendEmail = (e) => {
+    e.preventDefault(); 
+    emailjs.sendForm('service_2xoymwe', 'template_3tg8v6k', e.target,'G0HIDSqGVUhFvBEDC')
+        .then((result) => {
+            console.log('Email successfully sent!', result.text);
+        }, (error) => {
+            console.log('Failed to send email. Error:', error.text);
+        });
+      }
+      const handleCombinedSubmit = (e) => {
+        e.preventDefault(); 
+        handleSubmit(e); 
+        sendEmail(e); 
+    }
+    const makeCall = async () => {
+      try {
+          const response = await axios.post('http://localhost:8000/api/twilio/make-call', {
+              to: selectedNumber
+          });
+          console.log('Call response:', response.data);
+      } catch (error) {
+          console.error('Error making call:', error);
+      }
+  };  
   return (
     <div className="donate-container">
       <div className="donate-wrapper">
@@ -172,7 +201,7 @@ const Donate = () => {
         </div>
 
         <div className="donation-form">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleCombinedSubmit}>
             <div className="form-group full-width">
               <label className="form-label">Select Food Type</label>
               <div className="food-type-grid">
@@ -292,7 +321,7 @@ const Donate = () => {
                 {locationError && <p className="error-message">{locationError}</p>}
               </div>
             </div>
-
+            
             <button 
               type="submit" 
               className={`submit-button ${isLoading ? 'loading' : ''}`}
@@ -300,6 +329,24 @@ const Donate = () => {
             >
               {isLoading ? 'Submitting...' : 'Submit Donation'}
             </button>
+            <h1 style={{textAlign: 'center'}}>OR</h1>
+            <select 
+    value={selectedNumber} 
+    onChange={(e) => setSelectedNumber(e.target.value)}
+>
+    {registeredNumbers.map((item) => (
+        <option key={item.number} value={item.number}>
+            {item.name} - {item.number}
+        </option>
+    ))}
+</select>
+                <button 
+                    type="button" 
+                    className="call-button"
+                    onClick={makeCall}
+                >
+                    Call
+                </button>
           </form>
         </div>
 

@@ -194,6 +194,22 @@
     font-size: 0.9rem;
     margin-top: 0.5rem;
 }
+.call-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.call-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
 
 /* Submit Button */
 .submit-button {
