@@ -76,7 +76,7 @@ const Register = () => {
         
         console.log('Registration successful, user type:', formData.userType);
         alert('Registration successful!');
-        navigate('/login');
+        navigate('/user-dashboard');
       } else {
         setError(response.data.message || 'Registration failed. Please try again.');
       }
